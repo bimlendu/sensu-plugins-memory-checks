@@ -32,6 +32,11 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
          short: '-s SCHEME',
          long: '--scheme SCHEME',
          default: "#{Socket.gethostname}.memory"
+  
+  option :proc_path,
+         long: '--proc-path /proc',
+         proc: proc(&:to_s),
+         default: '/proc'
 
   def run
     # Metrics borrowed from hoardd: https://github.com/coredump/hoardd
@@ -67,6 +72,6 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
   end
 
   def meminfo_output
-    File.open('/proc/meminfo', 'r')
+    File.open("#{config[:proc_path]}/meminfo", 'r')
   end
 end

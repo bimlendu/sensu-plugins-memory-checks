@@ -33,6 +33,11 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
          long: '--scheme SCHEME',
          default: "#{Socket.gethostname}.memory_percent"
 
+  option :proc_path,
+         long: '--proc-path /proc',
+         proc: proc(&:to_s),
+         default: '/proc'
+
   def run
     # Based on memory-metrics.rb
 
@@ -90,6 +95,6 @@ class MemoryGraphite < Sensu::Plugin::Metric::CLI::Graphite
   end
 
   def meminfo_output
-    File.open('/proc/meminfo', 'r')
+    File.open("#{config[:proc_path]}/meminfo", 'r')
   end
 end
